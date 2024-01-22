@@ -1,5 +1,7 @@
 package games.eight.puzzle;
 
+import java.io.File;
+
 /**
  * @author HQ
  */
@@ -16,4 +18,5 @@ public class EightPuzzleConstant {
     public static final int MIN_LEVEL = 2;
     public static final int MAX_LEVEL = 4;
     public static final String[] GAMES = {"八数码", "其他游戏"};
+    public static final String SOLUTION_FILE_PATH = "eight" + File.separator + "puzzle" + File.separator + "path.txt";
 }

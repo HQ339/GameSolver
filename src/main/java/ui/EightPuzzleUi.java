@@ -102,8 +102,8 @@ public class EightPuzzleUi {
         Object selectedItem = orderComboBox.getSelectedItem();
         order = selectedItem == null ? 3 : (Integer) selectedItem;
 
-        String initialStateInput = JOptionPane.showInputDialog(frame, "输入初始状态 (用空格分隔):");
-        String targetStateInput = JOptionPane.showInputDialog(frame, "输入目标状态 (用空格分隔):");
+        String initialStateInput = JOptionPane.showInputDialog(frame, "输入初始状态 (用空格分隔, 空白块使用0表示):");
+        String targetStateInput = JOptionPane.showInputDialog(frame, "输入目标状态 (用空格分隔, 空白块使用0表示):");
 
         initialState = parseMatrixInput(initialStateInput, order);
         targetState = parseMatrixInput(targetStateInput, order);
@@ -141,7 +141,7 @@ public class EightPuzzleUi {
 
         Stack<EightPuzzleState> solution = result.get(message);
 
-        File file = new File("eight" + File.separator + "puzzle" + File.separator + "path.txt");
+        File file = new File(EightPuzzleConstant.SOLUTION_FILE_PATH);
         System.out.println(file.getAbsolutePath());
         try (BufferedWriter out = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             int steps = 0;
@@ -170,6 +170,16 @@ public class EightPuzzleUi {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            new EightPuzzleSolutionViewer().createAndShowGui();
+        });
+        frame.setVisible(false);
     }
 
     private StringBuilder getRowStr(int[] row) {
