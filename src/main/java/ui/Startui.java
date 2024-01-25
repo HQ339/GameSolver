@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
+ * 开始界面
+ *
  * @author HQ
  */
 public class Startui {

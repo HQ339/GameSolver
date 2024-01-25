@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 数码状态类，默认为八数码
+ *
  * @author HQ
  */
 public class EightPuzzleState {
@@ -12,12 +14,33 @@ public class EightPuzzleState {
      * 阶数
      */
     public static int level;
+    /**
+     * 目标状态
+     */
     public static int[][] goal;
-    private int[][] state;
+    /**
+     * 空白块的位置
+     */
     private final Map<String, Integer> blank;
+    /**
+     * 目前状态
+     */
+    private int[][] state;
+    /**
+     * 步数
+     */
     private int steps;
+    /**
+     * 代价
+     */
     private int cost;
+    /**
+     * 通往此状态的父节点
+     */
     private EightPuzzleState parent;
+    /**
+     * 由父节点到此状态的移动方向
+     */
     private String path;
 
     public EightPuzzleState(int[][] state, int steps, int cost, EightPuzzleState parent, String move) {
@@ -37,6 +60,11 @@ public class EightPuzzleState {
         this.state = state;
     }
 
+    /**
+     * 查找空白块的坐标
+     *
+     * @return 空白块的位置
+     */
     public Map<String, Integer> getBlank() {
         boolean flag = false;
         for (int i = 0; i < state.length; i++) {

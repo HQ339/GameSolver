@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 /**
+ * 展示得到的解
+ *
  * @author HQ
  */
 public class EightPuzzleSolutionViewer {
@@ -58,6 +60,7 @@ public class EightPuzzleSolutionViewer {
     }
 
     private void loadSolution(JTextArea solutionArea) {
+        // 从文件中读出解
         File file = new File(EightPuzzleConstant.SOLUTION_FILE_PATH);
 
         if (!file.exists()) {

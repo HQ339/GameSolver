@@ -17,6 +17,8 @@ import java.util.Map;
 import java.util.Stack;
 
 /**
+ * 数字华容道（数码问题）求解界面
+ *
  * @author HQ
  */
 public class EightPuzzleUi {
@@ -35,7 +37,7 @@ public class EightPuzzleUi {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel orderPanel = new JPanel();
-        JLabel orderLabel = new JLabel("选择阶数 (2-4): ");
+        JLabel orderLabel = new JLabel("选择阶数 (" + EightPuzzleConstant.MIN_LEVEL + "-" + EightPuzzleConstant.MAX_LEVEL + "): ");
         ArrayList<Integer> orderList = new ArrayList<>();
 
         for (int i = EightPuzzleConstant.MIN_LEVEL; i <= EightPuzzleConstant.MAX_LEVEL; i++) {
@@ -102,23 +104,40 @@ public class EightPuzzleUi {
         Object selectedItem = orderComboBox.getSelectedItem();
         order = selectedItem == null ? 3 : (Integer) selectedItem;
 
-        String initialStateInput = JOptionPane.showInputDialog(frame, "输入初始状态 (用空格分隔, 空白块使用0表示):");
-        String targetStateInput = JOptionPane.showInputDialog(frame, "输入目标状态 (用空格分隔, 空白块使用0表示):");
-
-        initialState = parseMatrixInput(initialStateInput, order);
-        targetState = parseMatrixInput(targetStateInput, order);
+        initialState = getInputMatrix("输入初始状态 (用空格分隔, 0表示空白):");
+        targetState = getInputMatrix("输入目标状态 (用空格分隔, 0表示空白):");
 
         displayMatrices(initialState, targetState);
 
         JOptionPane.showMessageDialog(frame, "状态输入成功.");
     }
 
+    private int[][] getInputMatrix(String message) {
+        JTextArea inputArea = new JTextArea(12, 12);
+        JScrollPane scrollPane = new JScrollPane(inputArea);
+
+        JOptionPane.showMessageDialog(frame, scrollPane, message, JOptionPane.PLAIN_MESSAGE);
+
+        String[] rows = inputArea.getText().split("\n");
+
+        int[][] matrix = new int[order][order];
+
+        for (int i = 0; i < order; i++) {
+            String[] values = rows[i].split("\\s+");
+            for (int j = 0; j < order; j++) {
+                matrix[i][j] = Integer.parseInt(values[j]);
+            }
+        }
+
+        return matrix;
+    }
+
     private void handleSolveButton(boolean solveQuickly) {
-        // TODO
         EightPuzzleUtils.solveQuickly = solveQuickly;
         if (order == EightPuzzleConstant.MAX_LEVEL && !solveQuickly) {
+            // 四阶求较佳解需要很长时间
             int choice = JOptionPane.showOptionDialog(frame,
-                    "阶数为4，建议选择快速求解，否则可能耗时较长。",
+                    "阶数为" + order + "，建议选择快速求解，否则可能耗时较长。",
                     "提示",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
@@ -127,20 +146,24 @@ public class EightPuzzleUi {
                     "继续求较佳解");
 
             if (choice == JOptionPane.INFORMATION_MESSAGE) {
+                // 设置为快速求解
                 EightPuzzleUtils.solveQuickly = true;
             }
         }
 
+        // 调用方法
         EightPuzzleSearch search = new EightPuzzleSearch(initialState, targetState, order);
         Map<String, Stack<EightPuzzleState>> result = search.search();
         String message = (String) result.keySet().toArray()[0];
         JOptionPane.showMessageDialog(frame, message);
         if (!EightPuzzleConstant.GET_SOLUTION_SUCCESS.equals(message)) {
+            // 未求解成功
             return;
         }
 
         Stack<EightPuzzleState> solution = result.get(message);
 
+        // 打印路径到控制台并写入文件
         File file = new File(EightPuzzleConstant.SOLUTION_FILE_PATH);
         System.out.println(file.getAbsolutePath());
         try (BufferedWriter out = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
@@ -171,6 +194,7 @@ public class EightPuzzleUi {
             throw new RuntimeException(e);
         }
 
+        // 求解成功并写入文件后展示解
         SwingUtilities.invokeLater(() -> {
             try {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -197,20 +221,6 @@ public class EightPuzzleUi {
         }
         rowStr.append("]");
         return rowStr;
-    }
-
-    private int[][] parseMatrixInput(String input, int order) {
-        int[][] matrix = new int[order][order];
-        String[] values = input.split("\\s+");
-
-        int index = 0;
-        for (int i = 0; i < order; i++) {
-            for (int j = 0; j < order; j++) {
-                matrix[i][j] = Integer.parseInt(values[index]);
-                index++;
-            }
-        }
-        return matrix;
     }
 
     private void displayMatrices(int[][] initialState, int[][] targetState) {
