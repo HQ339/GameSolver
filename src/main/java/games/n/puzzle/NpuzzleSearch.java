@@ -1,4 +1,4 @@
-package games.eight.puzzle;
+package games.n.puzzle;
 
 import java.util.*;
 
@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @author HQ
  */
-public class EightPuzzleSearch {
+public class NpuzzleSearch {
     /**
      * 初始状态
      */
@@ -17,10 +17,10 @@ public class EightPuzzleSearch {
      */
     private int[][] goal;
 
-    public EightPuzzleSearch(int[][] initialState, int[][] goal, int level) {
+    public NpuzzleSearch(int[][] initialState, int[][] goal, int level) {
         this.initialState = initialState;
         this.goal = goal;
-        EightPuzzleState.level = level;
+        NpuzzleState.level = level;
     }
 
     /**
@@ -28,36 +28,27 @@ public class EightPuzzleSearch {
      *
      * @return 此次搜索的结果（成功与否）和解的栈
      */
-    public Map<String, Stack<EightPuzzleState>> search() {
-        EightPuzzleState.goal = this.goal;
+    public Map<String, Stack<NpuzzleState>> search() {
+        Map<String, Stack<NpuzzleState>> result = preJudgment();
+
+        if (result != null) {
+            return result;
+        }
+        result = new HashMap<>(3);
         // 初始状态
-        EightPuzzleState initialPuzzleState = new EightPuzzleState(
-                initialState, 0, EightPuzzleUtils.calculateCost(initialState, 0), null, null
+        NpuzzleState initialPuzzleState = new NpuzzleState(
+                initialState, 0, NpuzzleUtils.calculateCost(initialState, 0), null, null
         );
         // 问题的解
-        Stack<EightPuzzleState> solution;
-        // 返回的结果
-        Map<String, Stack<EightPuzzleState>> result = new HashMap<>(3);
-        // 输入的状态错误
-        if (!EightPuzzleUtils.stateCorrect(initialState, goal)) {
-            result.put(EightPuzzleConstant.INPUT_STATE_ERROR, null);
-            return result;
-        }
-        // 不可求解
-        if (!EightPuzzleUtils.solvable(initialState, goal)) {
-            result.put(EightPuzzleConstant.NOT_SOLVABLE, null);
-            return result;
-        }
-
-        System.out.println("开始求解");
+        Stack<NpuzzleState> solution;
 
         // 记录时间
         long start = System.currentTimeMillis();
 
         // 构造优先队列，所有的状态按照EightPuzzleState里的cost的值排列
-        Queue<EightPuzzleState> queue = new PriorityQueue<>(Comparator.comparingInt(EightPuzzleState::getCost));
+        Queue<NpuzzleState> queue = new PriorityQueue<>(Comparator.comparingInt(NpuzzleState::getCost));
         // 记录已经访问过的节点
-        Set<EightPuzzleState> visited = new HashSet<>();
+        Set<NpuzzleState> visited = new HashSet<>();
         // 初始状态入队
         queue.offer(initialPuzzleState);
 
@@ -68,13 +59,13 @@ public class EightPuzzleSearch {
         while (!queue.isEmpty()) {
             nodeCnt++;
             // 将优先级最高的节点出队，作为本次判断以及生成邻居节点的对象
-            EightPuzzleState curr = queue.poll();
+            NpuzzleState curr = queue.poll();
 
             // 求解成功
             if (Arrays.deepEquals(curr.getState(), goal)) {
                 // 装入解的路径
-                solution = EightPuzzleUtils.loadSolutionStack(curr);
-                result.put(EightPuzzleConstant.GET_SOLUTION_SUCCESS, solution);
+                solution = NpuzzleUtils.loadSolutionStack(curr);
+                result.put(NpuzzleConstant.GET_SOLUTION_SUCCESS, solution);
                 long end = System.currentTimeMillis();
                 System.out.println("求解完毕，耗时：" + (end - start) + "ms, " + "步数: " + curr.getSteps() + "。");
                 System.out.println("访问节点个数: " + nodeCnt + "。");
@@ -85,11 +76,18 @@ public class EightPuzzleSearch {
 
             // 继续求解
             // 生成邻居状态
-            List<EightPuzzleState> neighborStates = EightPuzzleUtils.generateNeighborStates(curr);
-            if (!neighborStates.isEmpty()) {
-                for (EightPuzzleState neighborState : neighborStates) {
+            Map<String, int[][]> neighbors = NpuzzleUtils.generateNeighborStates(curr);
+            if (!neighbors.isEmpty()) {
+                // 移动方向
+                Set<String> directions = neighbors.keySet();
+                for (String direction : directions) {
+                    int[][] neighbor = neighbors.get(direction);
+                    NpuzzleState neighborState = new NpuzzleState(
+                            neighbor, curr.getSteps() + 1,
+                            NpuzzleUtils.calculateCost(neighbor, curr.getSteps()), curr, direction
+                    );
                     // 如果该邻居节点未访问过，入队
-                    if (!EightPuzzleUtils.contains(visited, neighborState)) {
+                    if (!NpuzzleUtils.contains(visited, neighborState)) {
                         queue.offer(neighborState);
                     }
                 }
@@ -100,8 +98,32 @@ public class EightPuzzleSearch {
             }
         }
 
-        result.put(EightPuzzleConstant.GET_SOLUTION_FAIL, null);
+        result.put(NpuzzleConstant.GET_SOLUTION_FAIL, null);
         return result;
+    }
+
+    /**
+     * 开始前的前置判断
+     * @return 存放解的容器
+     */
+    private Map<String, Stack<NpuzzleState>> preJudgment () {
+        NpuzzleState.goal = this.goal;
+
+        // 返回的结果
+        Map<String, Stack<NpuzzleState>> result = new HashMap<>(3);
+        // 输入的状态错误
+        if (!NpuzzleUtils.stateCorrect(initialState, goal)) {
+            result.put(NpuzzleConstant.INPUT_STATE_ERROR, null);
+            return result;
+        }
+        // 不可求解
+        if (!NpuzzleUtils.solvable(initialState, goal)) {
+            result.put(NpuzzleConstant.NOT_SOLVABLE, null);
+            return result;
+        }
+
+        System.out.println("开始求解");
+        return null;
     }
 
     public int[][] getInitialState() {

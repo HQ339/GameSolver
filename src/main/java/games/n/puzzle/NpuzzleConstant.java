@@ -1,4 +1,4 @@
-package games.eight.puzzle;
+package games.n.puzzle;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import java.io.File;
  *
  * @author HQ
  */
-public class EightPuzzleConstant {
+public class NpuzzleConstant {
     public static final String BLANK_ROW = "行";
     public static final String BLANK_COLUMN = "列";
     public static final String INPUT_STATE_ERROR = "输入的状态错误，正确输入应包含一个空白快0" +
@@ -20,7 +20,6 @@ public class EightPuzzleConstant {
     public static final String LEFT = "左移";
     public static final String RIGHT = "右移";
     public static final int MIN_LEVEL = 2;
-    public static final int MAX_LEVEL = 4;
-    public static final String[] GAMES = {"八数码", "其他游戏"};
+    public static final int MAX_LEVEL = 5;
     public static final String SOLUTION_FILE_PATH = "eight" + File.separator + "puzzle" + File.separator + "path.txt";
 }

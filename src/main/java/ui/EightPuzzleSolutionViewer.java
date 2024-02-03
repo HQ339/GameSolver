@@ -1,6 +1,6 @@
 package ui;
 
-import games.eight.puzzle.EightPuzzleConstant;
+import games.n.puzzle.NpuzzleConstant;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,10 +61,10 @@ public class EightPuzzleSolutionViewer {
 
     private void loadSolution(JTextArea solutionArea) {
         // 从文件中读出解
-        File file = new File(EightPuzzleConstant.SOLUTION_FILE_PATH);
+        File file = new File(NpuzzleConstant.SOLUTION_FILE_PATH);
 
         if (!file.exists()) {
-            JOptionPane.showMessageDialog(frame, "解决方案文件不存在：" + EightPuzzleConstant.SOLUTION_FILE_PATH);
+            JOptionPane.showMessageDialog(frame, "解决方案文件不存在：" + NpuzzleConstant.SOLUTION_FILE_PATH);
             return;
         }
 

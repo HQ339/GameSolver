@@ -1,4 +1,4 @@
-package games.eight.puzzle;
+package games.n.puzzle;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author HQ
  */
-public class EightPuzzleState {
+public class NpuzzleState {
     /**
      * 阶数
      */
@@ -37,13 +37,13 @@ public class EightPuzzleState {
     /**
      * 通往此状态的父节点
      */
-    private EightPuzzleState parent;
+    private NpuzzleState parent;
     /**
      * 由父节点到此状态的移动方向
      */
     private String path;
 
-    public EightPuzzleState(int[][] state, int steps, int cost, EightPuzzleState parent, String move) {
+    public NpuzzleState(int[][] state, int steps, int cost, NpuzzleState parent, String move) {
         this.blank = new HashMap<>();
         this.state = state;
         this.steps = steps;
@@ -70,8 +70,8 @@ public class EightPuzzleState {
         for (int i = 0; i < state.length; i++) {
             for (int j = 0; j < state[i].length; j++) {
                 if (state[i][j] == 0) {
-                    blank.put(EightPuzzleConstant.BLANK_ROW, i);
-                    blank.put(EightPuzzleConstant.BLANK_COLUMN, j);
+                    blank.put(NpuzzleConstant.BLANK_ROW, i);
+                    blank.put(NpuzzleConstant.BLANK_COLUMN, j);
                     flag = true;
                     break;
                 }
@@ -99,11 +99,11 @@ public class EightPuzzleState {
         this.cost = cost;
     }
 
-    public EightPuzzleState getParent() {
+    public NpuzzleState getParent() {
         return parent;
     }
 
-    public void setParent(EightPuzzleState parent) {
+    public void setParent(NpuzzleState parent) {
         this.parent = parent;
     }
 
@@ -123,7 +123,7 @@ public class EightPuzzleState {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        EightPuzzleState that = (EightPuzzleState) o;
+        NpuzzleState that = (NpuzzleState) o;
         return Arrays.deepEquals(state, that.state);
     }
 

@@ -1,4 +1,4 @@
-package games.eight.puzzle;
+package games.n.puzzle;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
  *
  * @author HQ
  */
-public class EightPuzzleUtils {
+public class NpuzzleUtils {
     /**
      * 是否快速求解
      */
@@ -27,7 +27,7 @@ public class EightPuzzleUtils {
         initialStateInverseNum = getInverseNum(initialState);
         goalInverseNum = getInverseNum(goal);
         // 判断
-        if (EightPuzzleState.level % 2 != 0) {
+        if (NpuzzleState.level % 2 != 0) {
             // 阶数为奇数时，仅需判断逆序数是否同奇偶即可
             return initialStateInverseNum % 2 == goalInverseNum % 2;
         }
@@ -89,55 +89,39 @@ public class EightPuzzleUtils {
      * @param curr 目前的状态
      * @return 生成的邻居状态的集合
      */
-    public static List<EightPuzzleState> generateNeighborStates(EightPuzzleState curr) {
+    public static Map<String, int[][]> generateNeighborStates(NpuzzleState curr) {
         if (curr == null) {
-            return Collections.emptyList();
+            return Collections.emptyMap();
         }
 
         // 生成节点时的移动方向不与path相反，否则会得到当前节点的父节点
         String path = curr.getPath();
         Map<String, Integer> blank = curr.getBlank();
-        List<EightPuzzleState> neighborStates = new ArrayList<>();
+        Map<String, int[][]> neighborStates = new HashMap<>(4);
 
         // 生成状态
-        Integer row = blank.get(EightPuzzleConstant.BLANK_ROW);
-        Integer col = blank.get(EightPuzzleConstant.BLANK_COLUMN);
+        Integer row = blank.get(NpuzzleConstant.BLANK_ROW);
+        Integer col = blank.get(NpuzzleConstant.BLANK_COLUMN);
         int[][] state = curr.getState();
-        if (!EightPuzzleConstant.DOWN.equals(path) && row != 0) {
+        if (!NpuzzleConstant.DOWN.equals(path) && row != 0) {
             // 上移，并排除重复状态
             int[][] neighborArr = swap(state, row, row - 1, col, col);
-            EightPuzzleState neighbor = new EightPuzzleState(
-                    neighborArr, curr.getSteps() + 1,
-                    calculateCost(neighborArr, curr.getSteps()), curr, EightPuzzleConstant.UP
-            );
-            neighborStates.add(neighbor);
+            neighborStates.put(NpuzzleConstant.UP, neighborArr);
         }
-        if (!EightPuzzleConstant.UP.equals(path) && row != EightPuzzleState.level - 1) {
+        if (!NpuzzleConstant.UP.equals(path) && row != NpuzzleState.level - 1) {
             // 下移
             int[][] neighborArr = swap(state, row, row + 1, col, col);
-            EightPuzzleState neighbor = new EightPuzzleState(
-                    neighborArr, curr.getSteps() + 1,
-                    calculateCost(neighborArr, curr.getSteps()), curr, EightPuzzleConstant.DOWN
-            );
-            neighborStates.add(neighbor);
+            neighborStates.put(NpuzzleConstant.DOWN, neighborArr);
         }
-        if (!EightPuzzleConstant.RIGHT.equals(path) && col != 0) {
+        if (!NpuzzleConstant.RIGHT.equals(path) && col != 0) {
             // 左移
             int[][] neighborArr = swap(state, row, row, col, col - 1);
-            EightPuzzleState neighbor = new EightPuzzleState(
-                    neighborArr, curr.getSteps() + 1,
-                    calculateCost(neighborArr, curr.getSteps()), curr, EightPuzzleConstant.LEFT
-            );
-            neighborStates.add(neighbor);
+            neighborStates.put(NpuzzleConstant.LEFT, neighborArr);
         }
-        if (!EightPuzzleConstant.LEFT.equals(path) && col != EightPuzzleState.level - 1) {
+        if (!NpuzzleConstant.LEFT.equals(path) && col != NpuzzleState.level - 1) {
             // 右移
             int[][] neighborArr = swap(state, row, row, col, col + 1);
-            EightPuzzleState neighbor = new EightPuzzleState(
-                    neighborArr, curr.getSteps() + 1,
-                    calculateCost(neighborArr, curr.getSteps()), curr, EightPuzzleConstant.RIGHT
-            );
-            neighborStates.add(neighbor);
+            neighborStates.put(NpuzzleConstant.RIGHT, neighborArr);
         }
 
         return neighborStates;
@@ -183,8 +167,8 @@ public class EightPuzzleUtils {
      * @param curr 当前状态
      * @return 解
      */
-    public static Stack<EightPuzzleState> loadSolutionStack(EightPuzzleState curr) {
-        Stack<EightPuzzleState> solution = new Stack<>();
+    public static Stack<NpuzzleState> loadSolutionStack(NpuzzleState curr) {
+        Stack<NpuzzleState> solution = new Stack<>();
         // 由当前状态开始回溯
         while (curr.getParent() != null) {
             // 入栈，迭代
@@ -203,8 +187,8 @@ public class EightPuzzleUtils {
      * @param neighborState 待判断的邻居状态
      * @return 包含与否
      */
-    public static boolean contains(Set<EightPuzzleState> visited, EightPuzzleState neighborState) {
-        for (EightPuzzleState state : visited) {
+    public static boolean contains(Set<NpuzzleState> visited, NpuzzleState neighborState) {
+        for (NpuzzleState state : visited) {
             if (Arrays.deepEquals(state.getState(), neighborState.getState())) {
                 return true;
             }
@@ -289,7 +273,7 @@ public class EightPuzzleUtils {
      * @return 索引数组，0索引代表的是行坐标，1索引代表的是列坐标
      */
     private static int[] getIndex(int num) {
-        int[][] goal = EightPuzzleState.goal;
+        int[][] goal = NpuzzleState.goal;
         int length = goal.length;
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {

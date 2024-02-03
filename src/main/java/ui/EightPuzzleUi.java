@@ -1,9 +1,9 @@
 package ui;
 
-import games.eight.puzzle.EightPuzzleConstant;
-import games.eight.puzzle.EightPuzzleSearch;
-import games.eight.puzzle.EightPuzzleState;
-import games.eight.puzzle.EightPuzzleUtils;
+import games.n.puzzle.NpuzzleConstant;
+import games.n.puzzle.NpuzzleSearch;
+import games.n.puzzle.NpuzzleState;
+import games.n.puzzle.NpuzzleUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,10 +37,10 @@ public class EightPuzzleUi {
         JPanel mainPanel = new JPanel(new BorderLayout());
 
         JPanel orderPanel = new JPanel();
-        JLabel orderLabel = new JLabel("选择阶数 (" + EightPuzzleConstant.MIN_LEVEL + "-" + EightPuzzleConstant.MAX_LEVEL + "): ");
+        JLabel orderLabel = new JLabel("选择阶数 (" + NpuzzleConstant.MIN_LEVEL + "-" + NpuzzleConstant.MAX_LEVEL + "): ");
         ArrayList<Integer> orderList = new ArrayList<>();
 
-        for (int i = EightPuzzleConstant.MIN_LEVEL; i <= EightPuzzleConstant.MAX_LEVEL; i++) {
+        for (int i = NpuzzleConstant.MIN_LEVEL; i <= NpuzzleConstant.MAX_LEVEL; i++) {
             orderList.add(i);
         }
 
@@ -133,11 +133,11 @@ public class EightPuzzleUi {
     }
 
     private void handleSolveButton(boolean solveQuickly) {
-        EightPuzzleUtils.solveQuickly = solveQuickly;
-        if (order == EightPuzzleConstant.MAX_LEVEL && !solveQuickly) {
-            // 四阶求较佳解需要很长时间
+        NpuzzleUtils.solveQuickly = solveQuickly;
+        if (order >= 4 && !solveQuickly) {
+            // 四阶及大于四阶求较佳解需要很长时间
             int choice = JOptionPane.showOptionDialog(frame,
-                    "阶数为" + order + "，建议选择快速求解，否则可能耗时较长。",
+                    "阶数为" + order + "，建议选择快速求解，否则可能耗时较长，甚至可能得不到解。",
                     "提示",
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.INFORMATION_MESSAGE,
@@ -147,29 +147,29 @@ public class EightPuzzleUi {
 
             if (choice == JOptionPane.INFORMATION_MESSAGE) {
                 // 设置为快速求解
-                EightPuzzleUtils.solveQuickly = true;
+                NpuzzleUtils.solveQuickly = true;
             }
         }
 
         // 调用方法
-        EightPuzzleSearch search = new EightPuzzleSearch(initialState, targetState, order);
-        Map<String, Stack<EightPuzzleState>> result = search.search();
+        NpuzzleSearch search = new NpuzzleSearch(initialState, targetState, order);
+        Map<String, Stack<NpuzzleState>> result = search.search();
         String message = (String) result.keySet().toArray()[0];
         JOptionPane.showMessageDialog(frame, message);
-        if (!EightPuzzleConstant.GET_SOLUTION_SUCCESS.equals(message)) {
+        if (!NpuzzleConstant.GET_SOLUTION_SUCCESS.equals(message)) {
             // 未求解成功
             return;
         }
 
-        Stack<EightPuzzleState> solution = result.get(message);
+        Stack<NpuzzleState> solution = result.get(message);
 
         // 打印路径到控制台并写入文件
-        File file = new File(EightPuzzleConstant.SOLUTION_FILE_PATH);
+        File file = new File(NpuzzleConstant.SOLUTION_FILE_PATH);
         System.out.println(file.getAbsolutePath());
         try (BufferedWriter out = new BufferedWriter(new FileWriter(file, StandardCharsets.UTF_8))) {
             int steps = 0;
             while (!solution.isEmpty()) {
-                EightPuzzleState curr = solution.pop();
+                NpuzzleState curr = solution.pop();
                 String path = curr.getPath();
 
                 if (path != null) {

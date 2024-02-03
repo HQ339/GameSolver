@@ -1,7 +1,5 @@
 package ui;
 
-import games.eight.puzzle.EightPuzzleConstant;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -22,14 +20,14 @@ public class Startui {
         JLabel label = new JLabel("选择一个游戏:");
         panel.add(label);
 
-        JComboBox<String> gameComboBox = new JComboBox<>(EightPuzzleConstant.GAMES);
+        JComboBox<String> gameComboBox = new JComboBox<>(UiConstant.GAMES);
         panel.add(gameComboBox);
 
         JButton startButton = new JButton("选择完毕");
         startButton.addActionListener(event -> {
             String selectedGame = (String) gameComboBox.getSelectedItem();
             if (selectedGame != null) {
-                if (EightPuzzleConstant.GAMES[0].equals(selectedGame)) {
+                if (UiConstant.GAMES[0].equals(selectedGame)) {
                     System.out.println("八数码");
                     SwingUtilities.invokeLater(() -> {
                         try {
@@ -40,9 +38,9 @@ public class Startui {
                         new EightPuzzleUi().createAndShowGui();
                     });
                     frame.setVisible(false);
-                } else {
+                } else if (UiConstant.GAMES[1].equals(selectedGame)){
                     // todo
-                    System.out.println("其他游戏");
+                    System.out.println("数独");
                 }
             }
         });
