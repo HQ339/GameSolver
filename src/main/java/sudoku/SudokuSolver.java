@@ -10,20 +10,17 @@ public class SudokuSolver {
     public static int backtracksCnt = 0;
 
     public static boolean search(int[][] grid) {
-        if (SudokuUtils.inputJudge(grid)) {
+        if (!SudokuUtils.inputJudge(grid)) {
             return false;
         }
+        System.out.println("开始求解");
         return search(0, grid);
     }
-    /**
-     *
-     * @param n
-     * @return
-     */
+
 
     public static boolean search(int n, int[][] grid) {
         if (n == 81) {
-            SudokuUtils.printGrid(grid);
+            SudokuUtils.printAndWriteGrid(grid);
             return true;
         }
 

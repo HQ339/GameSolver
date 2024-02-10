@@ -23,7 +23,7 @@
     <inspection_tool class="AlibabaClassCastExceptionWithSubListToArrayList" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AlibabaClassCastExceptionWithToArray" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AlibabaClassMustHaveAuthor" enabled="true" level="WARNING" enabled_by_default="true" />
-    <inspection_tool class="AlibabaClassNamingShouldBeCamel" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="AlibabaClassNamingShouldBeCamel" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AlibabaCollectionInitShouldAssignCapacity" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AlibabaCommentsMustBeJavadocFormat" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="AlibabaConcurrentExceptionWithModifyOriginSubList" enabled="true" level="WARNING" enabled_by_default="true" />

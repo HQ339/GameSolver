@@ -15,7 +15,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author HQ
  */
-public class EightPuzzleSolutionViewer {
+public class NPuzzleSolutionViewer {
     private JFrame frame;
 
     public void createAndShowGui() {
@@ -48,9 +48,10 @@ public class EightPuzzleSolutionViewer {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(frame, exception.getMessage());
                     System.out.println(exception.getMessage());
                 }
-                new EightPuzzleUi().createAndShowGui();
+                new NPuzzleUi().createAndShowGui();
             });
             frame.setVisible(false);
         });
@@ -73,7 +74,7 @@ public class EightPuzzleSolutionViewer {
         try (BufferedReader reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
-                solutionText.append(line).append("\n");
+                solutionText.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "无法加载解决方案：" + e.getMessage());

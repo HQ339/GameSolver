@@ -21,5 +21,12 @@ public class NpuzzleConstant {
     public static final String RIGHT = "右移";
     public static final int MIN_LEVEL = 2;
     public static final int MAX_LEVEL = 5;
-    public static final String SOLUTION_FILE_PATH = "eight" + File.separator + "puzzle" + File.separator + "path.txt";
+    public static final String SOLUTION_FILE_PATH = "src" + File.separator +
+            "main" + File.separator +
+            "java" + File.separator +
+            "games" + File.separator +
+            "n" + File.separator +
+            "puzzle" + File.separator +
+            "puzzle" + File.separator +
+            "path.txt";
 }

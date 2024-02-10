@@ -21,7 +21,7 @@ import java.util.Stack;
  *
  * @author HQ
  */
-public class EightPuzzleUi {
+public class NPuzzleUi {
     private int order;
     private int[][] initialState;
     private int[][] targetState;
@@ -118,7 +118,8 @@ public class EightPuzzleUi {
 
         JOptionPane.showMessageDialog(frame, scrollPane, message, JOptionPane.PLAIN_MESSAGE);
 
-        String[] rows = inputArea.getText().split("\n");
+        // 匹配各系统换行符
+        String[] rows = inputArea.getText().split("\\R");
 
         int[][] matrix = new int[order][order];
 
@@ -191,6 +192,7 @@ public class EightPuzzleUi {
             out.write("步数: " + steps);
             out.newLine();
         } catch (IOException e) {
+            JOptionPane.showMessageDialog(frame, e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -201,7 +203,7 @@ public class EightPuzzleUi {
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            new EightPuzzleSolutionViewer().createAndShowGui();
+            new NPuzzleSolutionViewer().createAndShowGui();
         });
         frame.setVisible(false);
     }
@@ -224,16 +226,16 @@ public class EightPuzzleUi {
     }
 
     private void displayMatrices(int[][] initialState, int[][] targetState) {
-        StringBuilder initialStateStr = new StringBuilder("初始状态:\n");
-        StringBuilder targetStateStr = new StringBuilder("目标状态:\n");
+        StringBuilder initialStateStr = new StringBuilder("初始状态:" + System.lineSeparator());
+        StringBuilder targetStateStr = new StringBuilder("目标状态:" + System.lineSeparator());
 
         for (int i = 0; i < initialState.length; i++) {
             for (int j = 0; j < initialState[i].length; j++) {
                 initialStateStr.append(String.format("%-2d ", initialState[i][j]));
                 targetStateStr.append(String.format("%-2d ", targetState[i][j]));
             }
-            initialStateStr.append("\n");
-            targetStateStr.append("\n");
+            initialStateStr.append(System.lineSeparator());
+            targetStateStr.append(System.lineSeparator());
         }
 
         initialStateArea.setText(initialStateStr.toString());

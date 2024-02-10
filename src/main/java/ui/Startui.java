@@ -33,14 +33,16 @@ public class Startui {
                         try {
                             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                         } catch (Exception exception) {
+                            JOptionPane.showMessageDialog(frame, exception.getMessage());
                             System.out.println(exception.getMessage());
                         }
-                        new EightPuzzleUi().createAndShowGui();
+                        new NPuzzleUi().createAndShowGui();
                     });
                     frame.setVisible(false);
                 } else if (UiConstant.GAMES[1].equals(selectedGame)){
-                    // todo
                     System.out.println("数独");
+                    SwingUtilities.invokeLater(SudokuSolverGUI::new);
+                    frame.setVisible(false);
                 }
             }
         });
